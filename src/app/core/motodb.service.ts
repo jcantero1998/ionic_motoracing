@@ -1,67 +1,89 @@
-import { Injectable } from '@angular/core';
 import { IMoto } from '../share/interfaces';
-import { Storage } from '@ionic/storage';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class MotodbService {
-  auxMoto: IMoto;
-  auxMotoList: IMoto[] = [];
-  constructor(private storage: Storage) { }
-  // Stores a value
-  setItem(reference: string, value: IMoto) {
-    this.storage.set(reference, {
-      id: value.id, model: value.model, type:
-        value.type, price: value.price, cover: value.cover, description:
-        value.description
-    })
-      .then(
-        (data) => console.log('Stored first item!', data),
-        error => console.error('Error storing item', error)
+  private motosUrl = 'api/motos';
+
+  constructor(private http: HttpClient) { }
+
+  getMotos(): Observable<IMoto[]> {
+    return this.http.get<IMoto[]>(this.motosUrl)
+      .pipe(
+        tap(data => console.log(JSON.stringify(data))),
+        catchError(this.handleError)
       );
   }
-  // Gets a stored item
-  getItem(reference): Promise<IMoto> {
-    return this.storage.get(reference);
+
+  getMaxMotoId(): Observable<IMoto> {
+    return this.http.get<IMoto[]>(this.motosUrl)
+    .pipe(
+      // Get max value from an array
+      map(data => Math.max.apply(Math, data.map(function(o) { return o.id; }))   ),
+      catchError(this.handleError)
+    );
   }
-  // check if it is empty
-  empty() {
-    return this.storage.keys()
-      .then(
-        (data) => { return true },
-        error => { return false }
+
+  getMotoById(id: number): Observable<IMoto> {
+    const url = `${this.motosUrl}/${id}`;
+    return this.http.get<IMoto>(url)
+      .pipe(
+        tap(data => console.log('getMoto: ' + JSON.stringify(data))),
+        catchError(this.handleError)
       );
   }
-  // Retrieving all keys
-  keys(): Promise<string[]> {
-    return this.storage.keys();
-  }
-  // Retrieving all values
-  getAll(): Promise<IMoto[]> {
-    return this.storage.keys().then((k) => {
-      k.forEach(element => {
-        this.getItem(element).then(
-          (data: IMoto) => this.auxMotoList.push(data)
-        );
-      });
-      return this.auxMotoList;
-    });
-  }
-  // Removes a single stored item
-  remove(reference: string) {
-    this.storage.remove(reference)
-      .then(
-        data => console.log(data),
-        error => console.error(error)
+
+  createMoto(moto: IMoto): Observable<IMoto> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    moto.id = null;
+    return this.http.post<IMoto>(this.motosUrl, moto, { headers: headers })
+      .pipe(
+        tap(data => console.log('createMoto: ' + JSON.stringify(data))),
+        catchError(this.handleError)
       );
   }
-  // Removes all stored values.
-  clear() {
-    this.storage.clear()
-      .then(
-        data => console.log(data),
-        error => console.error(error)
+
+  deleteMoto(id: number): Observable<{}> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.motosUrl}/${id}`;
+    return this.http.delete<IMoto>(url, { headers: headers })
+      .pipe(
+        tap(data => console.log('deleteMoto: ' + id)),
+        catchError(this.handleError)
       );
   }
+
+  updateMoto(moto: IMoto): Observable<IMoto> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const url = `${this.motosUrl}/${moto.id}`;
+    return this.http.put<IMoto>(url, moto, { headers: headers })
+      .pipe(
+        tap(() => console.log('updateMoto: ' + moto.id)),
+        // Return the moto on an update
+        map(() => moto),
+        catchError(this.handleError)
+      );
+  }
+
+  private handleError(err) {
+    // in a real world app, we may send the server to some remote logging infrastructure
+    // instead of just logging it to the console
+    let errorMessage: string;
+    if (err.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      errorMessage = `An error occurred: ${err.error.message}`;
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
+    }
+    console.error(err);
+    return throwError(errorMessage);
+  }
+
 }

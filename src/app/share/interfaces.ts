@@ -1,8 +1,8 @@
 export interface IMoto {
-    id: string;
-    model: string;
-    type: string;
-    price: number;
-    cover: string;
-    description: string;
+    id:number;
+    modelo:string;
+    tipo:string;
+    imagen:string;
+    descripcion:string;
+    precio:number;
 }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-
+import { PreloadAllModules, RouterModule, Routes } from
+  '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
@@ -19,11 +19,11 @@ const routes: Routes = [
     path: 'edit/:id', loadChildren: './edit/edit.module#EditPageModule'
   },
 ];
-
-
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: PreloadAllModules
+    })
   ],
   exports: [RouterModule]
 })

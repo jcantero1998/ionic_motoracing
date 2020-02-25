@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MotodbService } from '../core/motodb.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { IMoto } from '../share/interfaces';
 
@@ -10,27 +10,33 @@ import { IMoto } from '../share/interfaces';
   templateUrl: './create.page.html',
   styleUrls: ['./create.page.scss'],
 })
+
 export class CreatePage implements OnInit {
 
   moto: IMoto;
   motoForm: FormGroup;
-  constructor(
-    private router: Router,
-    private MotodbService: MotodbService,
-    public toastController: ToastController
-  ) { }
+  errorMessage: string;
+  id:number;
+
+  constructor(private router: Router,
+    private motodbService: MotodbService,
+    private activatedroute: ActivatedRoute,
+    public toastController: ToastController) { }
+
   ngOnInit() {
     this.motoForm = new FormGroup({
-      model: new FormControl(''),
-      type: new FormControl(''),
-      price: new FormControl(''),
-      cover: new FormControl(''),
-      description: new FormControl(''),
+      modelo: new FormControl(''),
+      tipo: new FormControl(''),
+      imagen: new FormControl(''),
+      descripcion: new FormControl(''),
+      precio: new FormControl(''),
     });
+    this.id = parseInt(this.activatedroute.snapshot.params['productId']);
   }
+
   async onSubmit() {
     const toast = await this.toastController.create({
-      header: 'Guardar película',
+      header: 'Guardar Moto',
       position: 'top',
       buttons: [
         {
@@ -52,11 +58,33 @@ export class CreatePage implements OnInit {
     });
     toast.present();
   }
+
   saveMoto() {
-    this.moto = this.motoForm.value;
-    let nextKey = this.moto.model.trim();
-    this.moto.id = nextKey;
-    this.MotodbService.setItem(nextKey, this.moto);
-    console.warn(this.motoForm.value);
+    if (this.motoForm.valid) {
+      if (this.motoForm.dirty) {
+        this.moto = this.motoForm.value;
+        this.moto.id = this.id;
+        
+        this.motodbService.createMoto(this.moto)
+          .subscribe(
+            () => this.onSaveComplete(),
+            (error: any) => this.errorMessage = <any>error
+          );
+        
+      } else {
+        this.onSaveComplete();
+      }
+    } else {
+      this.errorMessage = 'Please correct the validation errors.';
+    }
   }
+
+  onSaveComplete(): void {
+    this.motoForm.reset();
+    this.router.navigate(['']);
+  }
+
+  
 }
+
+

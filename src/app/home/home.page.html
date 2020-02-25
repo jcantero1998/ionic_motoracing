@@ -23,14 +23,17 @@
 
   <div class="ion-padding">
     <ion-list>
-      <ion-item *ngFor="let moto of motos" (click)="motoTapped(moto)">
-        <ion-thumbnail slot="start">
-          <img src="{{moto.cover}}">
-        </ion-thumbnail>
-        <ion-label> {{moto.model}}</ion-label>
-      </ion-item>
+      <div *ngIf="haveValues">
+        <ion-item *ngFor="let moto of motos" (click)="motoTapped(moto)">
+          <ion-thumbnail slot="start">
+            <img src="{{moto.imagen}}">
+          </ion-thumbnail>
+          <ion-label> {{moto.modelo}}</ion-label>
+        </ion-item>
+      </div>
     </ion-list>
   </div>
+
 </ion-content>
 
 <ion-footer>

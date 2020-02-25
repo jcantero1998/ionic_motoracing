@@ -4,24 +4,28 @@ import { MotodbService } from '../core/motodb.service';
 import { IMoto } from '../share/interfaces';
 import { ToastController } from '@ionic/angular';
 
+
 @Component({
   selector: 'app-details',
   templateUrl: './details.page.html',
   styleUrls: ['./details.page.scss'],
 })
+
 export class DetailsPage implements OnInit {
 
-  id: string;
+  id: number;
   public moto: IMoto;
+
   constructor(
-    private activatedrouter: ActivatedRoute,
+    private activatedroute: ActivatedRoute,
     private router: Router,
-    private MotodbService: MotodbService,
+    private motodbService: MotodbService,
     public toastController: ToastController
   ) { }
+
   ngOnInit() {
-    this.id = this.activatedrouter.snapshot.params.id;
-    this.MotodbService.getItem(this.id).then(
+    this.id = parseInt(this.activatedroute.snapshot.params['id']);
+    this.motodbService.getMotoById(this.id).subscribe(
       (data: IMoto) => this.moto = data
     );
   }
@@ -29,6 +33,12 @@ export class DetailsPage implements OnInit {
   editRecord(moto) {
     this.router.navigate(['edit', moto.id])
   }
+
+  onSaveComplete(): void {
+    // Reset the form to clear the flags
+    this.router.navigate(['']);
+  }
+
   async removeRecord(id) {
     const toast = await this.toastController.create({
       header: 'Elimiar moto',
@@ -39,8 +49,9 @@ export class DetailsPage implements OnInit {
           icon: 'delete',
           text: 'ACEPTAR',
           handler: () => {
-            this.MotodbService.remove(id);
-            this.router.navigate(['home']);
+            this.motodbService.deleteMoto(id).subscribe(
+              () => this.onSaveComplete(),
+            );
           }
         }, {
           text: 'CANCELAR',
@@ -53,4 +64,6 @@ export class DetailsPage implements OnInit {
     });
     toast.present();
   }
+
+  
 }

@@ -9,20 +9,27 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { MotoData } from './core/moto-data';
+import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { MotodbService } from './core/motodb.service';
+
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
     IonicModule.forRoot(),
-    IonicStorageModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
+    InMemoryWebApiModule.forRoot(MotoData)
   ],
   providers: [
+    MotodbService,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
