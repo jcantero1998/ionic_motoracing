@@ -1,26 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MotodbService } from '../core/motodb.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { IMoto } from '../share/interfaces';
+
 
 @Component({
   selector: 'app-create',
   templateUrl: './create.page.html',
   styleUrls: ['./create.page.scss'],
 })
-
 export class CreatePage implements OnInit {
 
   moto: IMoto;
   motoForm: FormGroup;
-  errorMessage: string;
-  id:number;
+  motoNombre: string;
+  motoCiudad: string;
+  motoImage:string;
+  motoCapacidad:number;
+  motoEstrellas:number;
+  motoPrecio:number;
 
   constructor(private router: Router,
-    private motodbService: MotodbService,
-    private activatedroute: ActivatedRoute,
+    private motodb: MotodbService,
     public toastController: ToastController) { }
 
   ngOnInit() {
@@ -31,9 +34,7 @@ export class CreatePage implements OnInit {
       descripcion: new FormControl(''),
       precio: new FormControl(''),
     });
-    this.id = parseInt(this.activatedroute.snapshot.params['productId']);
   }
-
   async onSubmit() {
     const toast = await this.toastController.create({
       header: 'Guardar Moto',
@@ -58,33 +59,21 @@ export class CreatePage implements OnInit {
     });
     toast.present();
   }
-
   saveMoto() {
-    if (this.motoForm.valid) {
-      if (this.motoForm.dirty) {
-        this.moto = this.motoForm.value;
-        this.moto.id = this.id;
-        
-        this.motodbService.createMoto(this.moto)
-          .subscribe(
-            () => this.onSaveComplete(),
-            (error: any) => this.errorMessage = <any>error
-          );
-        
-      } else {
-        this.onSaveComplete();
-      }
-    } else {
-      this.errorMessage = 'Please correct the validation errors.';
-    }
+    this.moto = this.motoForm.value;
+    let record = {};
+    record['modelo'] = this.moto.modelo;
+    record['tipo'] = this.moto.tipo;
+    record['descripcion'] = this.moto.descripcion;
+    record['image'] = this.moto.imagen;
+    record['precio'] = this.moto.precio;
+    this.motodb.create_Moto(record).then(resp => {
+      console.log(resp);
+    })
+      .catch(error => {
+        console.log(error);
+      });
   }
-
-  onSaveComplete(): void {
-    this.motoForm.reset();
-    this.router.navigate(['']);
-  }
-
-  
 }
 
 

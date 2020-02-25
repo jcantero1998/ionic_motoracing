@@ -1,5 +1,5 @@
 export interface IMoto {
-    id:number;
+    id:string;
     modelo:string;
     tipo:string;
     imagen:string;

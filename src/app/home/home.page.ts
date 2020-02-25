@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 export class HomePage implements OnInit {
 
   public motos: IMoto[];
-  haveValues: boolean = false;
 
   constructor(private motodbService: MotodbService, private route:
     Router) { }
@@ -25,25 +24,28 @@ export class HomePage implements OnInit {
   ngOnInit(): void {
     // If the database is empty set initial values
     this.retrieveValues();
-    
   }
-
-  ionViewDidEnter(){
-    if(this.motos !== undefined){
-      this.motos.splice(0);
-    }
+  ionViewDidEnter() {
+    // Remove elements if it already has values
     this.retrieveValues();
   }
+  retrieveValues() {
+    this.motodbService.read_Motos().subscribe(data => {
+      this.motos = data.map(e => {
+        return {
+          id: e.payload.doc.id,
+          isEdit: false,
+          modelo: e.payload.doc.data()['modelo'],
+          descripcion: e.payload.doc.data()['descripcion'],
+          tipo: e.payload.doc.data()['tipo'],
+          imagen: e.payload.doc.data()['image'],
+          precio: e.payload.doc.data()['precio'],
+        };
+      })
+      console.log(this.motos);
+    });
 
-  retrieveValues(){
-    this.motodbService.getMotos().subscribe(
-      (data: IMoto[]) => {
-        this.haveValues = false;
-        this.motos = data;
-        this.haveValues = true;
-      });
   }
-
   async motoTapped(moto) {
     this.route.navigate(['details', moto.id]);
   }
