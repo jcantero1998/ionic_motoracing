@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-button [routerLink]="['/home']" routerDirection="back" color="medium">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+    </ion-button>
+    <ion-title slot="secondary">Detalles de la moto</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card *ngIf="moto">
+    <img src="{{moto.image}}">
+    <ion-card-header>
+      {{moto.model}}
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>{{moto.price}}</ion-label>
+        </ion-item>
+        <ion-item>
+          {{moto.description}}
+        </ion-item>
+      </ion-list>
+      <ion-button shape="round" color="secondary" size="small" (click)="editRecord(moto.id)">
+        <ion-icon size="small" slot="icon-only" name="create"></ion-icon>
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

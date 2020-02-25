@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-button [routerLink]="['/home']" routerDirection="back" color="medium">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+    </ion-button>
+    <ion-title slot="secondary">Editar moto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="motoForm" (ngSubmit)="savemoto()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-label>Modelo:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="text" id="model" placeholder="Model" formControlName="model" name="model"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Tipo:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="text" id="type" placeholder="Type" formControlName="type" name="type"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Precio:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="number" id="price" placeholder="Price" formControlName="price" name="price" ></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Foto:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="url" id="image" placeholder="Cover" formControlName="image" name="price" placeholder="image"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Descripción:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-textarea id="description" placeholder="Description" formControlName="description" name="description" placeholder="description" ></ion-textarea>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button type="submit" color="primary">
+      <ion-label>Guardar</ion-label>
+      <ion-icon name="save"></ion-icon>
+    </ion-button>
+    <ion-button (click)="deleteMoto()" expand="block" fill="clear" shape="round">
+      <ion-label>Borrar</ion-label>
+    </ion-button>
+
+  </form>
+</ion-content>

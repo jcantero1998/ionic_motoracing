@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      MotoRacing 
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="welcome-card">
+    <img src="/assets/motoracing.jpg" alt=""/>
+    <ion-card-header>
+      <ion-card-title>¿QUIENES SOMOS?</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipiscing elit curabitur pretium, nec mi suscipit semper fermentum quis duis suspendisse nulla, dis montes blandit sem ad ridiculus praesent cursus. Pharetra at netus feugiat montes ultricies faucibus vulputate ultrices laoreet litora, eu cum ac pretium id commodo phasellus et felis a est, convallis accumsan eget elementum turpis primis diam conubia aliquam.      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="ion-padding">
+    <ion-list>
+      <ion-item *ngFor="let moto of motos" (click)="motoTapped(moto)">
+        <ion-thumbnail slot="start">
+          <img src="{{moto.image}}">
+        </ion-thumbnail>
+        <ion-label> {{moto.model}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <p class="ion-text-center">Jon Cantero Romero &copy; MotoRacing 2019<p>
+  </ion-toolbar>
+</ion-footer>
