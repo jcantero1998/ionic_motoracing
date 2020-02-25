@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-button [routerLink]="['/home']" routerDirection="back" color="medium">
+      <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+    </ion-button>
+    <ion-title slot="secondary">Crear moto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="motoForm" (ngSubmit)="onSubmit()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-label>Modelo:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="text" placeholder="..." formControlName="model"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Tipo:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="text" placeholder="..." formControlName="type"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Precio:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="number" formControlName="price"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Foto:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-input type="url" placeholder="http://****" formControlName="cover"></ion-input>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-label>Descripción:</ion-label>
+        </ion-col>
+        <ion-col>
+          <ion-textarea placeholder="****" formControlName="description"></ion-textarea>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-button type="submit" color="primary">
+      <ion-label>Guardar</ion-label>
+      <ion-icon name="save"></ion-icon>
+    </ion-button>
+  </form>
+</ion-content>
